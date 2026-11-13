@@ -350,6 +350,7 @@ HDR, Detail, and GPU and memory (last: the rows to change when something is wron
 | | HDR contrast | 50% to 200% around mid grey (while HDR is on) | 100% |
 | | HDR tone mapper | Vanilla (the game's curve), PsychoV35 (RenoDX's; with HDR set to Native. DLSS, FSR and TAAU do not take its scene yet: the game's own upscale runs) | Vanilla |
 | | Texture detail | Auto, Full, Medium, Low | Auto |
+| | Field of view | 50% to 300%, in steps of 5; applies immediately during gameplay | 100% (original) |
 | | Anisotropic filtering | Game's, 2x, 4x, 8x, 16x | 16x |
 | | GPU device | Auto, or each graphics card by name (after a restart) | Auto |
 | | VRAM budget | Auto, 3.6, 4.8, 6, 7.5, 9, 11 GB (2.2 GB only from the Minimum (4GB) preset); a quality preset sets it | Auto |
@@ -360,7 +361,6 @@ HDR, Detail, and GPU and memory (last: the rows to change when something is wron
 | | FPS counter position | Top right, Top left, Bottom right, Bottom left | Top right |
 | | Menu size | Small, Medium, Large | Medium |
 | | Game speed | Per frame, Real time | Real time |
-| | Field of view | 50% to 150%, in steps of 5; applies immediately during gameplay | 100% (original) |
 | | Text speed | Normal, 2x, 4x, Instant | Normal |
 | | Text size | Original, 110%, 125%, 150%, 175% (dialogue, Navi and signs) | Original |
 | | Microphone | Off, Default, or each microphone by name | Default |
