@@ -362,6 +362,7 @@ HDR, Detail, and GPU and memory (last: the rows to change when something is wron
 | | Game speed | Per frame, Real time | Real time |
 | | Field of view | 50% to 150%, in steps of 5; applies immediately during gameplay | 100% (original) |
 | | Text speed | Normal, 2x, 4x, Instant | Normal |
+| | Skip cutscenes (Experimental) | Off, On; use the normal dialogue-skip shortcut and displayed confirmation. Unfinished: may overlap dialogue; some conversations and chest sequences are unsupported | Off |
 | | Text size | Original, 110%, 125%, 150%, 175% (dialogue, Navi and signs) | Original |
 | | Microphone | Off, Default, or each microphone by name | Default |
 | | Game language | The game's 16 languages, each by its own name (after a restart) | The one built with |
