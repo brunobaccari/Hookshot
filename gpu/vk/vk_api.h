@@ -54,6 +54,8 @@ enum { HOS_OPT_SKIP_OPENING = 52 };
 /* The Auto run row (Controls): 0 Off, 1 On, A (the sprint) kept held after it is let go (host/auto_run.h,
    host/nn_hid.c). */
 enum { HOS_OPT_AUTO_RUN = 55 };
+/* Gameplay's authored cutscene skip override: 0 preserves the native permission. */
+enum { HOS_OPT_ALLOW_CUTSCENE_SKIP = 56 };
 
 /* (hookshot) the controls' names (host/nn_hid.c, host/pad_sdl.c, the pad_ and key_ lines of hookshot_options.ini):
    the Switch's buttons in nn::hid's bit order, and a gamepad's inputs by position (the bottom face button first:

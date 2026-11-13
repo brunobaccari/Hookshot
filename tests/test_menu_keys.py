@@ -85,6 +85,7 @@ static int down_key, queued_key;
 static bool focused, pad_last;
 // OPTIONS
 static Options opts;
+std::atomic<int> cutscene_skip_now{0};
 static HWND GetForegroundWindow() { return 1; }
 static DWORD GetCurrentProcessId() { return 1; }
 static void GetWindowThreadProcessId(HWND, DWORD* pid) { *pid = focused ? 1 : 2; }

@@ -484,10 +484,16 @@ number is not the obvious one:
 | `field_of_view` | 50 to 150 percent of the current vertical gameplay FOV; 100 is the original. Applies immediately, before projection and culling. The resulting vertical angle stays within 5 to 140 degrees |
 | `robust_buffers` | 0 Auto (on), 1 Off, 2 On |
 | `game_speed` | 0 Per frame, 1 Real time |
+| `skip_unskippable_cutscenes` | 0 Off (default), 1 experimental native skip permission override |
 | `text_speed` | 0 Normal, 1 2x, 2 4x, 3 Instant |
 | `microphone` | 0 Off, 1 Default, 2 and up a microphone (the name in `microphone_device` decides which) |
 | `mouse_camera` | 0 As the stick, 1 Native |
 | `layout_preset` | 0 Nintendo, 1 Xbox / PC, 2 Swap Face, 3 Custom |
+
+Gameplay's Skip cutscenes (Experimental) remains off by default. Use the normal dialogue-skip shortcut to reveal the
+native skip prompt, then its displayed confirmation button. It can skip the opening movie. This is unfinished: it may
+overlap other dialogue, and some conversations and chest sequences remain unsupported. The game retains its event
+completion path; the option does not force-stop the decoder or grant items.
 
 The other rows are 0 Off and 1 On. Some are read at the start, before the menu exists, by the code that needs them:
 `handheld_profile` and `output_res` (`host/nn_applet.c`), `ultrawide` (`host/hos_main.c`), `robust_buffers`

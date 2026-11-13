@@ -164,6 +164,7 @@ inline constexpr Entry kpt_BR[] = {
     {"Enable double-tap Jump for takeoff and landing. Hold Jump to climb or L to descend.", "Ativa o toque duplo em Pular para decolar e pousar. Segure Pular para subir ou L para descer."},
     {"Enter opens the inventory editor: unlock or relock equipment, items, upgrades and quest items, and change amounts.", "Enter abre o editor de inventário: libere ou bloqueie equipamentos, itens, melhorias e itens de missão, e mude quantidades."},
     {"Expanded", "Expandido"},
+    {"Experimental and unfinished. Can skip the opening movie. Use the normal dialogue-skip shortcut to show the skip prompt, then the displayed button to confirm. It may overlap dialogue; some conversations and chest sequences remain unsupported.", "Experimental e incompleto. Permite pular o filme de abertura. Use o atalho normal de pular diálogo para mostrar a opção de pular e depois o botão exibido para confirmar. Pode sobrepor diálogos; algumas conversas e sequências de baús ainda não são compatíveis."},
     {"F1 only", "Só F1"},
     {"FPS counter", "Contador de FPS"},
     {"FPS counter position", "Posição do contador de FPS"},
@@ -434,6 +435,7 @@ inline constexpr Entry kpt_BR[] = {
     {"Shows \"Playing Hookshot\" and the time played in your Discord status, while Discord runs on this PC.", "Mostra \"Jogando Hookshot\" e o tempo de jogo no seu status do Discord, enquanto o Discord roda neste PC."},
     {"Silences the game while another window has the focus. The sound comes back when you switch to the game.", "Silencia o jogo enquanto outra janela está em foco. O som volta quando você volta ao jogo."},
     {"Six made frames", "Seis quadros gerados"},
+    {"Skip cutscenes (Experimental)", "Pular cenas (Experimental)"},
     {"Small", "Pequeno"},
     {"Smaller than your screen: faster, and scaled up to the window.", "Menor que a sua tela: mais rápido e ampliado para a janela."},
     {"Smaller, for a desk.", "Menor, para jogar na mesa."},
@@ -6989,7 +6991,7 @@ inline constexpr Entry kzh_Hant[] = {
 };
 inline constexpr Lang kLangs[] = {
     {"en", "English", nullptr, 0},
-    {"pt-BR", "Português (Brasil)", kpt_BR, 530},
+    {"pt-BR", "Português (Brasil)", kpt_BR, 532},
     {"es-419", "Español (Latinoamérica)", kes_419, 536},
     {"es", "Español (España)", kes, 538},
     {"fr", "Français", kfr, 533},

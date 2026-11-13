@@ -248,6 +248,72 @@ def patch_camera_centering(source):
         '#include "a64.h"\n', '#include "a64.h"\nextern int hos_disable_camera_centering(void);\n', 1)
 
 
+# The event's active-state tick extracts its authored skip permission here. Other conditions later disable the same
+# native controller; leave those calls, its button/confirmation state and the event's completion path untouched.
+CUTSCENE_HEAD = "void f_83b63210(Ctx *__restrict A64_NOESC c) {\n"
+CUTSCENE_ANCHOR = ("L_83b6323c:;\n"
+                   "    c->x[8]=recomp_load64(c,c->x[19] + 16);\n"
+                   "    c->x[0]=recomp_load64(c,c->x[19] + 32);\n"
+                   "    c->x[8]=recomp_load64(c,c->x[8] + 952);\n"
+                   "    { uint64_t _s = c->x[8]; uint64_t _r; _r = (_s >> 26) & ((1ULL << 1) - 1); c->x[1] = _r; }\n")
+CUTSCENE_HOOK = "    c->x[1] = hos_oot_cutscene_skip_allowed(c->x[1]);\n"
+CUTSCENE_CALL = "{ uint64_t _t = c->x[8]; c->x[30] = 0x83b63258ULL; A64_ICALL(c, _t); }\n"
+
+
+def patch_cutscene_skip(source):
+    if source.count(CUTSCENE_HEAD) != 1:
+        return None
+    start = source.index(CUTSCENE_HEAD)
+    end = source.find("\n}", start)
+    if end < 0:
+        return None
+    body = source[start:end]
+    if body.count(CUTSCENE_ANCHOR) != 1 or body.count(CUTSCENE_CALL) != 1:
+        return None
+    if CUTSCENE_ANCHOR + CUTSCENE_HOOK in body:
+        return source
+    body = body.replace(CUTSCENE_ANCHOR, CUTSCENE_ANCHOR + CUTSCENE_HOOK, 1)
+    return (source[:start] + body + source[end:]).replace(
+        '#include "a64.h"\n', '#include "a64.h"\nextern uint64_t hos_oot_cutscene_skip_allowed(uint64_t native_allowed);\n', 1)
+
+
+# The other timeline player's authored bit gates a separate pane/readiness check. Override only the bit's branch,
+# so allowing skip still requires that native check before the controller is enabled.
+CUTSCENE_TIMELINE_HEAD = "void f_80ac8650(Ctx *__restrict A64_NOESC c) {\n"
+CUTSCENE_TIMELINE_BRANCH = "if (((c->x[8] >> 2) & 1)) { goto L_80ac9628; }\n"
+CUTSCENE_TIMELINE_ALLOW = "if (hos_oot_cutscene_skip_allowed((c->x[8] >> 2) & 1)) { goto L_80ac9628; }\n"
+CUTSCENE_TIMELINE_PREFIX = ("L_80ac87c8:;\n"
+                            "    c->x[8]=recomp_load64(c,c->x[19] + 16);\n"
+                            "    c->x[0]=recomp_load64(c,c->x[19] + 32);\n"
+                            "    c->x[8]=recomp_load8(c,c->x[8] + 955);\n")
+CUTSCENE_TIMELINE_READY = ("L_80ac9628:;\n"
+                           "    { uint64_t _r = ((uint64_t)0 | ((c->x[0]) << 0)); c->x[20] = _r; }\n"
+                           "c->x[30] = 0x80ac9630ULL; f_83b60640(c);\n")
+
+
+def patch_cutscene_skip_timeline(source):
+    if source.count(CUTSCENE_TIMELINE_HEAD) != 1:
+        return None
+    start = source.index(CUTSCENE_TIMELINE_HEAD)
+    end = source.find("\n}", start)
+    if end < 0:
+        return None
+    body = source[start:end]
+    if body.count(CUTSCENE_TIMELINE_PREFIX) != 1 or body.count(CUTSCENE_TIMELINE_READY) != 1:
+        return None
+    if body.count(CUTSCENE_TIMELINE_BRANCH) + body.count(CUTSCENE_TIMELINE_ALLOW) != 1:
+        return None
+    old = CUTSCENE_TIMELINE_PREFIX + CUTSCENE_TIMELINE_BRANCH
+    new = CUTSCENE_TIMELINE_PREFIX + CUTSCENE_TIMELINE_ALLOW
+    if body.count(new) == 1 and old not in body:
+        return source
+    if body.count(old) != 1 or new in body:
+        return None
+    body = body.replace(old, new, 1)
+    return (source[:start] + body + source[end:]).replace(
+        '#include "a64.h"\n', '#include "a64.h"\nextern uint64_t hos_oot_cutscene_skip_allowed(uint64_t native_allowed);\n', 1)
+
+
 MENU_FOCUS_HEAD = "void f_802ed660(Ctx *__restrict A64_NOESC c) {\n"
 
 
@@ -892,6 +958,16 @@ def patch_file(s, name, protect_hearts=False):
         if opening != out:
             lines.append("oot_patches: the opening skip at %d function(s) in %s" % (n, name))
         out = opening
+    cutscene = patch_cutscene_skip(out) if protect_hearts else None
+    if cutscene is not None:
+        out = cutscene
+        counts["authored cutscene skip permission"] += 1
+        lines.append("oot_patches: authored cutscene skip permission in " + name)
+    timeline = patch_cutscene_skip_timeline(out) if protect_hearts else None
+    if timeline is not None:
+        out = timeline
+        counts["timeline cutscene skip permission"] += 1
+        lines.append("oot_patches: timeline cutscene skip permission in " + name)
     speed = patch_cct_speed(out) if protect_hearts else None
     if speed is not None:
         if speed[0] != out:
@@ -961,6 +1037,8 @@ def report(paths, counts, protect_hearts=False):
         done["disable camera centering"] = 0
         done["scene format"] = 0
         done["zstd stream hook"] = 0
+        done["authored cutscene skip permission"] = 0
+        done["timeline cutscene skip permission"] = 0
     total = collections.Counter()
     for c in counts:
         total.update(c)
